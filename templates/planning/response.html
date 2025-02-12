@@ -1,0 +1,25 @@
+{% extends "partials/base.html" %}
+
+
+{% block content %}
+<ul class="pl-96 pt-10">
+    <div class="max-w-sm alert alert-danger bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+    
+
+    
+                
+    <span class="block sm:inline font text-sm"><li>{{ message }}</li></span>
+  
+    
+    
+    <button class="flex flex-2 bg-[#095415] hover:bg-green-500 text-white font-bold py-2 px-4 rounded">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-white">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+          </svg>
+          
+        
+        <a href="{% url "create_planning"  %}">RETOUR</a> 
+    </button>
+    </div>
+</ul>
+{% endblock %}

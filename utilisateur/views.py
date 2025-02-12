@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
 from . import forms
 from .models import Formateur, Filiere, User, Apprenant, Classe, Matiere,Planning, Salle
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.utils import timezone
 
 # Create your views here.
 
@@ -13,10 +15,7 @@ def list_user(request):
 def accueil(request):
     return render(request, "utilisateur/accueil.html")
 
-def logout_view(request):
-    
-    logout(request)
-    return redirect('login')
+
 
 """ authentification """
 
@@ -32,10 +31,15 @@ def login_view(request):
             )
             if user is not None:
                 login(request, user)
-                return redirect("/liste_formateur/")
+                return redirect("/info_utilisateur/")
             else:
                 messages.error(request, "Email ou mot de passe incorrect")
     return render(request, "utilisateur/login.html", context={'form': form, 'message': message})
+
+def logout_view(request):
+    
+    logout(request)
+    return redirect('login')
 
 """ Formateur """
 
@@ -161,7 +165,7 @@ def create_planning(request):
         classe_id = request.POST.get('classe')
         selected_classe = Classe.objects.get(id=classe_id)
 
-        # Récupérer les professeurs et matières associés à la classe via la filière
+        # Récupérer les formateurs et matières associés à la classe via la filière
         filiere = selected_classe.filiere
         formateurs = Formateur.objects.filter(filiere=filiere)
         matieres = Matiere.objects.filter(matiere=filiere)
@@ -178,26 +182,179 @@ def create_planning(request):
             salle_id = request.POST.get('salle_id')
             matiere_id = request.POST.get('matiere')
 
-            
-                
-                # Récupérer les formateurs et matières associés à la filière de la classe sélectionnée
-            salle = Salle.objects.get(id=salle_id)
-            classe = Classe.objects.get(id=classe_id)
-            formateur = Formateur.objects.get(id=formateur_id)
-            matiere = Matiere.objects.get(id=matiere_id)
+            try:
+                date_debut = timezone.datetime.strptime(date_debut, '%Y-%m-%d')
+                date_fin = timezone.datetime.strptime(date_fin, '%Y-%m-%d')
+                heure_cours = timezone.datetime.strptime(heure_cours, '%H:%M')
 
-            Planning.objects.create(
-                date_debut=date_debut,
-                date_fin=date_fin,
-                jour=jour,
-                heure_cours=heure_cours,
-                duree=duree,
-                classe=classe,
-                formateur=formateur,
-                salle=salle,
-                matiere=matiere,
-            )
-            return redirect('/liste_formateur/')
-    
+            except ValueError:
+                message = "Le format choisi est incorrect"
+                return render(request, "planning/response.html", {"message":message})
+            
+            occupation_salle = Planning.objects.filter(salle_id=salle_id, date_debut=date_debut, date_fin=date_fin, jour=jour, heure_cours=heure_cours).exists()
+            occupation_formateur = Planning.objects.filter(formateur_id=formateur_id, date_debut=date_debut, date_fin=date_fin, jour=jour, heure_cours=heure_cours).exists()
+            occupation_classe = Planning.objects.filter(classe_id=classe_id, date_debut=date_debut, date_fin=date_fin, heure_cours=heure_cours, jour=jour)
+            #on vérifie si la salle, le formateur ou classe est occupé avant de créer
+            if occupation_salle:
+                message = "La salle est occupée à cette date et heure"
+                return render(request, "planning/response.html", {"message":message})
+            elif occupation_formateur:
+                message = "Le formateur choisi a cours à cette date et heure"
+                return render(request, "planning/response.html", {"message":message})
+            elif occupation_classe:
+                message = "Le classe choisi a cours à cette date et heure"
+                return render(request, "planning/response.html", {"message":message})
+
+            else:
+                # Récupérer les formateurs et matières associés à la filière de la classe sélectionnée
+                salle = Salle.objects.get(id=salle_id)
+                classe = Classe.objects.get(id=classe_id)
+                formateur = Formateur.objects.get(id=formateur_id)
+                matiere = Matiere.objects.get(id=matiere_id)
+
+                Planning.objects.create(
+                    date_debut=date_debut,
+                    date_fin=date_fin,
+                    jour=jour,
+                    heure_cours=heure_cours,
+                    duree=duree,
+                    classe=classe,
+                    formateur=formateur,
+                    salle=salle,
+                    matiere=matiere,
+                )
+                return redirect('/liste_formateur/')
 
     return render(request, 'planning/create_planning.html', {"formateurs":formateurs, "matieres":matieres, "salles":salles, "classes":classes, "selected_classe":selected_classe})
+
+def info_utilisateur(request):
+    utilisateur = request.user
+    #on vérifie si l'utilisateur connecté est un formateur ou apprenant
+    try:
+        
+        info_form = Formateur.objects.get(user_formateur_id=utilisateur)
+        
+
+    # Récupérer les emplois du temps du formateur
+        planning = Planning.objects.filter(formateur=info_form)
+
+    # Extraire les classes associées auformateur connecté à travers son emploi du temps
+        mes_classes = set(emploi.classe for emploi in planning)
+        
+        
+       
+        return render(request, "utilisateur/info_formateur.html", {"info_form":info_form, "mes_classes":mes_classes})
+
+    except Formateur.DoesNotExist:
+    #si l'utilisateur n'est un formateur, il vérifie si est appprenant
+        try:
+            info_app = Apprenant.objects.filter(user_apprenant_id=utilisateur)
+            return render(request,"utilisateur/info_app.html", {"info_app":info_app})
+        except Apprenant.DoesNotExist:
+            sms="code marche pas"
+            return render(request, "utilisateur/info_app.html", {"sms": sms})
+
+def liste_classe(request):
+    utilisateur = request.user
+    formateur = Formateur.objects.get(user_formateur_id=utilisateur)
+    planning = Planning.objects.filter(formateur=formateur)
+
+    mes_classes = set(emploi.classe for emploi in planning)
+    
+    return render(request, "utilisateur/liste_classe.html", {"mes_classes":mes_classes})
+
+def planning_formateur(request):
+    utilisateur = request.user
+    formateur = Formateur.objects.get(user_formateur_id=utilisateur)
+    plannings = Planning.objects.filter(formateur=formateur)
+    return render(request, "utilisateur/planning_formateur.html", {"plannings":plannings})
+
+def info_planning(request, id):
+    planning = get_object_or_404(Planning, id=id) 
+    return render(request, "planning/info_planning.html", {"planning":planning})
+
+def planning_app(request):
+    utilisateur = request.user
+    apprenant = Apprenant.objects.get(user_apprenant_id=utilisateur)    
+    classe = Classe.objects.get(apprenant=apprenant)
+    planning = Planning.objects.filter(classe=classe)
+    #Formulaire pour filter les dates pour l'affichage de l'emplois du temps
+    form = forms.DateEdtForm(request.GET)
+
+    if form.is_valid():
+        date_debut = form.cleaned_data.get("date_debut")
+        date_fin = form.cleaned_data.get("date_fin")
+        planning = planning.filter(date_debut__gte=date_debut, date_fin__lte=date_fin)
+
+    return render(request, "planning/planning_app.html", {"planning":planning, "form":form})
+
+def liste_salle(request):
+    if request.method == "POST":
+        nom_salle = request.POST["nom_salle"]
+        Salle.objects.create(
+            nom_salle = nom_salle,
+        )
+        return redirect("/liste_salle/")
+    
+    salles = Salle.objects.filter(archive=False)
+    paginator = Paginator(salles, 5)
+    nbre_page = request.GET.get('page')
+    salles = paginator.get_page(nbre_page)
+    return render(request, "planning/liste_salle.html", {"salles":salles})   
+
+def modifier_salle(request, id):
+    salle = get_object_or_404(Salle, id=id)
+    if request.method == "POST":
+        nom_salle = request.POST["nom_salle"]
+        salles = Salle.objects.filter(pk=id)
+        salles.update(
+            nom_salle=nom_salle,
+        )
+        return redirect("/liste_salle/")
+
+    return render(request, "planning/modifier_salle.html", {"salle":salle}) 
+  
+def supprimer_salle(request, id):
+    salle = get_object_or_404(Salle, id=id)
+    
+    salle = Salle.objects.filter(pk=id)
+    salle.update(
+        archive=True
+    )
+    return redirect("/liste_salle/") 
+
+def liste_matiere(request):
+    if request.method == "POST":
+        nom_matiere = request.POST["nom_matiere"]
+        Matiere.objects.create(
+            nom_matiere = nom_matiere,
+        )
+        return redirect("/liste_matiere/")
+    
+    matieres = Matiere.objects.filter(archive=False)
+    paginator = Paginator(matieres, 5)
+    nbre_page = request.GET.get('page')
+    matieres = paginator.get_page(nbre_page)
+    return render(request, "planning/liste_matiere.html", {"matieres":matieres})   
+
+def modifier_matiere(request, id):
+    matiere = get_object_or_404(Matiere, id=id)
+    if request.method == "POST":
+        nom_matiere = request.POST["nom_matiere"]
+        matieres = Matiere.objects.filter(pk=id)
+        matieres.update(
+            nom_matiere=nom_matiere,
+        )
+        return redirect("/liste_matiere/")
+
+    return render(request, "planning/modifier_matiere.html", {"matiere":matiere}) 
+
+def supprimer_matiere(request, id):
+    matiere = get_object_or_404(Matiere, id=id)
+    
+    matiere = Matiere.objects.filter(pk=id)
+    matiere.update(
+        archive=True
+    )
+    return redirect("/liste_matiere/")
+    

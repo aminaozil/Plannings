@@ -20,6 +20,7 @@ class User(AbstractUser):
 
 class Matiere(models.Model):
     nom_matiere = models.CharField(max_length=200)
+    archive = models.BooleanField(default=False)
     
 
     def __str__(self):
@@ -71,6 +72,7 @@ class Apprenant(models.Model):
 
 class Salle(models.Model):
     nom_salle = models.CharField(max_length=150)
+    archive = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.nom_salle}"
@@ -97,4 +99,4 @@ class Planning(models.Model):
     matiere = models.ForeignKey(Matiere, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.date_debut} {self.date_fin}"
+        return f"{self.date_debut} {self.date_fin} {self.classe} {self.formateur.prenom} {self.formateur.nom}"

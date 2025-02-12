@@ -104,3 +104,6 @@ class PlanningForm(forms.ModelForm):
             
         }
     
+class DateEdtForm(forms.Form):
+    date_debut = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', "class":"border border-gray-500 rounded-lg"}))
+    date_fin = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', "class":"border border-gray-500 rounded-lg"}))

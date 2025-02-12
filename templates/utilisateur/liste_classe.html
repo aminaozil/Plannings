@@ -1,0 +1,73 @@
+{% extends "partials/base.html" %}
+
+{% block content %}
+{% include "utilisateur/tableau_bord.html" %}
+<div class="p-4 sm:ml-64">
+
+  <p class="text-3xl font-bold underline ml-96 mb-10">MES CLASSES</p>
+    <div class="pl-11 pt-10 pr-10">
+      
+        
+      
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-[700px]" >
+          <table class="w-[700px] text-sm text-left rtl:text-right text-gray-950 dark:text-gray-400">
+              <thead class=" text-white uppercase bg-[#095415] dark:bg-[#095415] dark:text-white">
+                  <tr>
+                      <th scope="col" class="px-6 py-3">
+                          CLASSE
+                      </th>
+                    
+                      <th scope="col" class="px-6 py-3">
+                          ACTIONS
+                      </th>
+                  </tr>
+              </thead>
+              {% for classe in mes_classes %}
+              {% comment %} {{ formateur.full_name|upper }} {% endcomment %}
+              <tbody>
+                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                      <th class="px-6 py-4 ">
+                        {{classe.nom_classe}}
+                      </th>
+                      <td class="px-6 py-4 text-center flex flex-2 gap-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 text-green-500 hover:text-[#095415]">
+                          <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                          <path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd" />
+                        </svg>
+    
+                      </td>
+                  </tr>
+                  
+              </tbody>
+              {% endfor %}
+          </table>
+        </div>
+      </div>
+      <br>
+  
+    
+   
+
+     {% comment %}  <div class="pagination ml-[170px]">
+        <span class="step-links">
+            {% if prof.has_previous %}
+                <a href="?page=1">&laquo; premier</a>
+                <a href="?page={{ prof.previous_page_number }}">précédent</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ prof.number }} sur {{ prof.paginator.num_pages }}.
+            </span>
+    
+            {% if prof.has_next %}
+                <a href="?page={{prof.next_page_number }}">suivant</a>
+                <a href="?page={{prof.paginator.num_pages }}">dernier &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+       {% endcomment %}
+      
+
+     
+</div>
+{% endblock %}

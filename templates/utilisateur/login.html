@@ -10,7 +10,7 @@
     <form action="" method="POST"
       class="max-w-md mx-auto md:max-h-[300px]  pl-7">
       {% csrf_token %}
-      <h1 class=" text-[#095415] font-bold text-2xl text-center" >Connexion</h1>
+      <h1 class=" text-[#095415] font-bold text-2xl text-center">Connexion</h1>
         <ul class=flashes>
             {% for message in messages %}
         
@@ -26,16 +26,10 @@
         <br>
 
         {{form.as_p}}
-      
-      
-      <p class="mb-2 float-right"> <a href="" > Mot de passe oublié ?</a></p>
-      <br>
-      <br>
     
-      <button type="submit" class="mb-3 text-white text-xl bg-[#095415] hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-700  rounded-lg text-sm w-full sm:w-full px-5 py-2.5 text-center dark:bg-green-700 dark:hover:bg-green-700 dark:focus:ring-[#095415]">Se connecter</button>
-      
     
-      
+      <button type="submit" class="mb-3 text-white text-xl bg-[#095415] hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-700  rounded-lg text-sm w-full sm:w-full px-4 py-2 text-center dark:bg-green-700 dark:hover:bg-green-700 dark:focus:ring-[#095415]">Se connecter</button>
+  
     </form>
 
     
