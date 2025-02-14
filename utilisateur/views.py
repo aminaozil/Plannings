@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.decorators import login_required
-from . import forms
-from .models import Formateur, Filiere, User, Apprenant, Classe, Matiere,Planning, Salle
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.utils import timezone
-
-# Create your views here.
+from django.core.mail import send_mail
+from django.contrib import messages
+from . import forms
+from .models import Formateur, User, Apprenant, Classe, Matiere, Planning, Salle, Filiere
 
 def list_user(request):
     return render(request, "utilisateur/list_user.html")
@@ -16,8 +16,8 @@ def accueil(request):
     return render(request, "utilisateur/accueil.html")
 
 
-
 """ authentification """
+
 
 def login_view(request):
     form = forms.LoginForm()
@@ -43,6 +43,8 @@ def logout_view(request):
 
 """ Formateur """
 
+@login_required
+@permission_required('formateur.add_formateur', raise_exception=True)
 def create_formateur(request):
     form = forms.FormateurForm()
     if request.method == "POST":
@@ -70,6 +72,7 @@ def create_formateur(request):
     
     return render(request, "utilisateur/create_formateur.html", {"form":form})
 
+@permission_required('formateur.change_formateur', raise_exception=True)
 def modifier_formateur(request, id):
     formateur = Formateur.objects.get(id=id)
     form = forms.FormateurForm(request.POST or None, instance=formateur)
@@ -78,6 +81,7 @@ def modifier_formateur(request, id):
         return redirect("/liste_formateur/")
     return render(request, "utilisateur/modifier_formateur.html", {"formateur": formateur, "form":form})
 
+@permission_required('formateur.delete_formateur', raise_exception=True)
 def supprimer_formateur(request, id=id):
     formateur = Formateur.objects.get(id=id)
     if request.method == "POST":
@@ -89,6 +93,7 @@ def supprimer_formateur(request, id=id):
 
     return render(request, "utilisateur/supprimer_formateur.html", {"formateur":formateur})
 
+@permission_required('formateur.view_formateur', raise_exception=True)
 def liste_formateur(request):
     formateurs = Formateur.objects.filter(archive=False)
     paginator = Paginator(formateurs, 4)
@@ -104,6 +109,7 @@ def liste_formateur(request):
 
 """ apprenant """
 
+@permission_required('apprenant.view_apprenant', raise_exception=True)
 def liste_apprenant(request):
     etudiant = Apprenant.objects.filter(archive=False)
     paginator = Paginator(etudiant, 4)
@@ -118,6 +124,7 @@ def liste_apprenant(request):
 
     return render(request, "utilisateur/liste_apprenant.html", {"apprenants": apprenants})
 
+@permission_required('apprenant.add_apprenant', raise_exception=True)
 def create_apprenant(request):
     form = forms.ApprenantForm()
     if request.method == "POST":
@@ -127,8 +134,6 @@ def create_apprenant(request):
         email = request.POST['email']
         classe_apprenant = request.POST['classe_apprenant']
         
-        
-
         apprenants = Apprenant.objects.create(
             user_apprenant = User.objects.get(id=user_apprenant) ,
             nom = nom,
@@ -144,6 +149,7 @@ def create_apprenant(request):
 
     return render(request, "utilisateur/create_apprenant.html", {"form":form})
 
+@permission_required('apprenant.change_apprenant', raise_exception=True)
 def modifier_apprenant(request, id):
     apprenant = Apprenant.objects.get(id=id)
     form = forms.ApprenantForm(request.POST or None, instance=apprenant)
@@ -152,7 +158,7 @@ def modifier_apprenant(request, id):
         return redirect("/liste_apprenant/")
     return render(request, "utilisateur/modifier_apprenant.html", {"apprenant": apprenant, "form":form})
 
-
+@permission_required('planning.add_planning', raise_exception=True)
 def create_planning(request):
     salles = Salle.objects.all()
     classes = Classe.objects.all()
@@ -227,33 +233,39 @@ def create_planning(request):
 
     return render(request, 'planning/create_planning.html', {"formateurs":formateurs, "matieres":matieres, "salles":salles, "classes":classes, "selected_classe":selected_classe})
 
+@login_required
 def info_utilisateur(request):
     utilisateur = request.user
     #on vérifie si l'utilisateur connecté est un formateur ou apprenant
-    try:
-        
-        info_form = Formateur.objects.get(user_formateur_id=utilisateur)
-        
-
-    # Récupérer les emplois du temps du formateur
-        planning = Planning.objects.filter(formateur=info_form)
-
-    # Extraire les classes associées auformateur connecté à travers son emploi du temps
-        mes_classes = set(emploi.classe for emploi in planning)
-        
-        
-       
-        return render(request, "utilisateur/info_formateur.html", {"info_form":info_form, "mes_classes":mes_classes})
-
-    except Formateur.DoesNotExist:
-    #si l'utilisateur n'est un formateur, il vérifie si est appprenant
+    try: 
+        if request.user.is_superuser:
+            
+            return render(request,"utilisateur/tableau_admin.html")
+    except User.DoesNotExist:
         try:
-            info_app = Apprenant.objects.filter(user_apprenant_id=utilisateur)
-            return render(request,"utilisateur/info_app.html", {"info_app":info_app})
-        except Apprenant.DoesNotExist:
-            sms="code marche pas"
-            return render(request, "utilisateur/info_app.html", {"sms": sms})
+        
+            info_form = Formateur.objects.get(user_formateur_id=utilisateur)
+        
 
+        # on récupère les emplois du temps du formateur
+            planning = Planning.objects.filter(formateur=info_form)
+
+        # on extrait les classes associées au formateur connecté à travers son emploi du temps
+            mes_classes = set(emploi.classe for emploi in planning)
+            
+            
+            return render(request, "utilisateur/info_formateur.html", {"info_form":info_form, "mes_classes":mes_classes})
+
+        except Formateur.DoesNotExist:
+    #si l'utilisateur n'est un formateur, il vérifie si est appprenant
+            try:
+                info_app = Apprenant.objects.filter(user_apprenant_id=utilisateur)
+                return render(request,"utilisateur/info_app.html", {"info_app":info_app})
+            except Apprenant.DoesNotExist:
+                return render(request,"utilisateur/error.html")
+    return render(request,"utilisateur/error.html")
+        
+@login_required
 def liste_classe(request):
     utilisateur = request.user
     formateur = Formateur.objects.get(user_formateur_id=utilisateur)
@@ -263,16 +275,42 @@ def liste_classe(request):
     
     return render(request, "utilisateur/liste_classe.html", {"mes_classes":mes_classes})
 
+@login_required
 def planning_formateur(request):
     utilisateur = request.user
     formateur = Formateur.objects.get(user_formateur_id=utilisateur)
-    plannings = Planning.objects.filter(formateur=formateur)
-    return render(request, "utilisateur/planning_formateur.html", {"plannings":plannings})
+    planning = Planning.objects.filter(formateur=formateur)
+    #Formulaire pour filter les dates pour l'affichage de l'emplois du temps
+    form = forms.DateEdtFormateurForm(request.GET)
 
+    if form.is_valid():
+        date_debut = form.cleaned_data.get("date_debut")
+        date_fin = form.cleaned_data.get("date_fin")
+        classe = form.cleaned_data.get("classe")
+        plannings = planning.filter(date_debut__gte=date_debut, date_fin__lte=date_fin, classe__gte=classe)
+
+    if request.user.is_superuser:
+        plannings = Planning.objects.all()
+        formateur = Formateur.objects.all()
+
+        form = forms.DateEdtFormateurForm(request.GET)
+
+        if form.is_valid():
+            date_debut = form.cleaned_data.get("date_debut")
+            date_fin = form.cleaned_data.get("date_fin")
+            classe = form.cleaned_data.get("classe")
+            plannings = plannings.filter(date_debut__gte=date_debut, date_fin__lte=date_fin, classe__gte=classe)
+
+        return render(request, "utilisateur/plannings.html", {"plannings":plannings, "form":form})
+        
+    return render(request, "utilisateur/planning_formateur.html", {"plannings":plannings, "form":form})
+
+@login_required
 def info_planning(request, id):
     planning = get_object_or_404(Planning, id=id) 
     return render(request, "planning/info_planning.html", {"planning":planning})
 
+@login_required
 def planning_app(request):
     utilisateur = request.user
     apprenant = Apprenant.objects.get(user_apprenant_id=utilisateur)    
@@ -288,6 +326,8 @@ def planning_app(request):
 
     return render(request, "planning/planning_app.html", {"planning":planning, "form":form})
 
+@login_required
+@permission_required('salle.view_salle', raise_exception=True)
 def liste_salle(request):
     if request.method == "POST":
         nom_salle = request.POST["nom_salle"]
@@ -300,8 +340,10 @@ def liste_salle(request):
     paginator = Paginator(salles, 5)
     nbre_page = request.GET.get('page')
     salles = paginator.get_page(nbre_page)
-    return render(request, "planning/liste_salle.html", {"salles":salles})   
-
+    return render(request, "planning/liste_salle.html", {"salles":salles}) 
+  
+@login_required
+@permission_required('salle.change_apprenant', raise_exception=True)
 def modifier_salle(request, id):
     salle = get_object_or_404(Salle, id=id)
     if request.method == "POST":
@@ -313,7 +355,9 @@ def modifier_salle(request, id):
         return redirect("/liste_salle/")
 
     return render(request, "planning/modifier_salle.html", {"salle":salle}) 
-  
+
+@login_required
+@permission_required('salle.delete_salle', raise_exception=True)
 def supprimer_salle(request, id):
     salle = get_object_or_404(Salle, id=id)
     
@@ -323,6 +367,8 @@ def supprimer_salle(request, id):
     )
     return redirect("/liste_salle/") 
 
+@login_required
+@permission_required('matiere.view_matiere', raise_exception=True)
 def liste_matiere(request):
     if request.method == "POST":
         nom_matiere = request.POST["nom_matiere"]
@@ -337,6 +383,8 @@ def liste_matiere(request):
     matieres = paginator.get_page(nbre_page)
     return render(request, "planning/liste_matiere.html", {"matieres":matieres})   
 
+@login_required
+@permission_required('matiere.change_matiere', raise_exception=True)
 def modifier_matiere(request, id):
     matiere = get_object_or_404(Matiere, id=id)
     if request.method == "POST":
@@ -349,6 +397,8 @@ def modifier_matiere(request, id):
 
     return render(request, "planning/modifier_matiere.html", {"matiere":matiere}) 
 
+@login_required
+@permission_required('matiere.delete_matiere', raise_exception=True)
 def supprimer_matiere(request, id):
     matiere = get_object_or_404(Matiere, id=id)
     
@@ -358,3 +408,43 @@ def supprimer_matiere(request, id):
     )
     return redirect("/liste_matiere/")
     
+#tableau bord administrateur
+def tableau_admin(request):
+    planning = Planning.objects.all()
+    formateur = Formateur.objects.all()
+    
+    #Formulaire pour filter les dates pour l'affichage de l'emplois du temps
+    form = forms.DateEdtFormateurForm(request.GET)
+
+    if form.is_valid():
+        date_debut = form.cleaned_data.get("date_debut")
+        date_fin = form.cleaned_data.get("date_fin")
+        classe = form.cleaned_data.get("classe")
+        plannings = planning.filter(date_debut__gte=date_debut, date_fin__lte=date_fin, classe__gte=classe)
+    
+    return render(request, "utilisateur/tableau_admin.html", {"plannings":plannings})
+
+
+#les envoies mails
+def send_emails(request):
+    if request.method == "POST":
+        form = forms.SendEmailForm(request.POST)
+    
+        if form.is_valid():
+            users = form.cleaned_data['users']
+            sujet = form.cleaned_data['sujet']
+            message = form.cleaned_data['message']
+            for user in users:
+                send_mail(
+                    sujet,
+                    message,
+                    'youmaminatambengue@gmail.com',
+                    [user.email],
+                    fail_silently=False,
+
+                )
+                messages.success(request, "les mails sont envoyés avec success")
+                return redirect("/tableau_administrateur/")
+    else:
+        form = forms.SendEmailForm()
+    return render(request, "planning/send_email.html", {"form":form})

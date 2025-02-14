@@ -1,4 +1,4 @@
-from .views import list_user, login_view, logout_view, accueil, create_formateur, modifier_formateur,planning_app,supprimer_matiere, modifier_matiere, liste_matiere, modifier_salle,supprimer_salle, liste_salle, info_planning,liste_classe,planning_formateur, supprimer_formateur, liste_formateur, liste_apprenant, create_apprenant, modifier_apprenant, create_planning, info_utilisateur
+from .views import list_user, login_view, logout_view, accueil, create_formateur, modifier_formateur,tableau_admin, send_emails,planning_app,supprimer_matiere, modifier_matiere, liste_matiere, modifier_salle,supprimer_salle, liste_salle, info_planning,liste_classe,planning_formateur, supprimer_formateur, liste_formateur, liste_apprenant, create_apprenant, modifier_apprenant, create_planning, info_utilisateur
 from django.urls import path
 
 
@@ -43,5 +43,10 @@ urlpatterns = [
     path('liste_matiere/',liste_matiere , name="liste_matiere"),
     path('modifier_matiere/<int:id>/',modifier_matiere , name="modifier_matiere"),
     path('supprimer_matiere/<int:id>/',supprimer_matiere , name="supprimer_matiere"),
-    
+
+    #send email
+    path('send_mail/',send_emails , name="send_mail"),
+
+    #administration 
+    path('tableau_administrateur/',tableau_admin , name="tableau_admin"),
 ]

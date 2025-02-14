@@ -1,0 +1,69 @@
+{% extends "partials/base.html" %}
+
+{% load static %}
+{% block content %}
+{% include "utilisateur/tableau_admin.html" %}
+<div class="p-4 sm:ml-64">
+    <div class="flex mb-4 items-center justify-center">
+        <img src="{% static 'images/logob.png' %}" class=" h-48 w-68 " alt="user">
+         
+      </div>
+      <form method="get">
+        {{ form.as_p }}
+        <button type="submit" class="bg-cyan-500 rounded-lg px-2 py-2 text-white hover:bg-cyan-700">recherhe</button>
+    </form>
+
+<div class="relative overflow-x-auto ml-48">
+    <table class="w-96 border border-gray-200 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="border border-gray-200 px-6 py-3">
+                    Jour
+                </th>
+                <th scope="col" class="border  border-gray-200 px-6 py-3">
+                    Heure
+                </th>
+                <th scope="col" class="border  border-gray-200 px-6 py-3">
+                    Matière
+                </th>
+                <th scope="col" class="border  border-gray-200 px-6 py-3">
+                    Salle
+                </th>
+                <th scope="col" class="border  border-gray-200 px-6 py-3">
+                    Formateur
+                </th>
+                <th scope="col" class="border border-gray-200 px-6 py-3">
+                    Durée
+                </th>
+            </tr>
+        </thead>
+        {% for edt in plannings %}
+        <tbody>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                <td class="border border-1 border-gray-200 px-6 py-4">
+                    {{edt.jour}}
+                </td>
+                <td class="border border-1 border-gray-200 px-6 py-4">
+                    {{edt.heure_cours|date:"H:i"}}
+                </td>
+                <td class="border border-1 border-gray-200 px-6 py-4">
+                    {{edt.matiere}}
+                </td>
+                <td class="border border-1 border-gray-200 px-6 py-4">
+                    {{edt.salle}}
+                </td>
+                <td class="border border-1 border-gray-200 px-6 py-4">
+                    M. {{edt.formateur.nom}}
+                </td>
+                <td class="border border-1 border-gray-200 px-6 py-4">
+                    {{edt.duree}}
+                </td>
+            </tr>
+            
+            
+        </tbody>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}

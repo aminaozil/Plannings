@@ -107,3 +107,18 @@ class PlanningForm(forms.ModelForm):
 class DateEdtForm(forms.Form):
     date_debut = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', "class":"border border-gray-500 rounded-lg"}))
     date_fin = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', "class":"border border-gray-500 rounded-lg"}))
+
+class DateEdtFormateurForm(forms.Form):
+    date_debut = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', "class":"mb-2 border border-gray-500 rounded-lg"}))
+    date_fin = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', "class":"mb-2 border border-gray-500 rounded-lg"}))
+    classe = forms.ModelChoiceField(queryset=Classe.objects.all(), widget=forms.Select(attrs={"class":"mb-2 border border-gray-500 rounded-lg"}))
+class SendEmailForm(forms.Form):
+    users = forms.ModelMultipleChoiceField(queryset=User.objects.all(), widget=forms.SelectMultiple(
+        attrs={
+             "class":"mb-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-cyan-500 dark:focus:border-cyan-500"
+        }
+        ))
+    sujet = forms.CharField(max_length=200, label="Sujet", widget=forms.TextInput(attrs={"class":"mb-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-cyan-500 dark:focus:border-cyan-500"}))
+    message = forms.CharField(max_length=300, widget=forms.Textarea(attrs={"class":"mb-5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-cyan-500 dark:focus:border-cyan-500"}), label="Message")
+
+    
