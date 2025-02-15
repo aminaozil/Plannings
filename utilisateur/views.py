@@ -5,12 +5,8 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.utils import timezone
 from django.core.mail import send_mail
-from django.contrib import messages
 from . import forms
 from .models import Formateur, User, Apprenant, Classe, Matiere, Planning, Salle, Filiere
-
-def list_user(request):
-    return render(request, "utilisateur/list_user.html")
 
 def accueil(request):
     return render(request, "utilisateur/accueil.html")
@@ -159,6 +155,8 @@ def modifier_apprenant(request, id):
     return render(request, "utilisateur/modifier_apprenant.html", {"apprenant": apprenant, "form":form})
 
 @permission_required('planning.add_planning', raise_exception=True)
+
+
 def create_planning(request):
     salles = Salle.objects.all()
     classes = Classe.objects.all()
@@ -236,33 +234,33 @@ def create_planning(request):
 @login_required
 def info_utilisateur(request):
     utilisateur = request.user
-    #on vérifie si l'utilisateur connecté est un formateur ou apprenant
+    #on vérifie si l'utilisateur connecté est un formateur ou apprenant ou admin
     try: 
-        if request.user.is_superuser:
-            
-            return render(request,"utilisateur/tableau_admin.html")
-    except User.DoesNotExist:
-        try:
+        info_app = Apprenant.objects.get(user_apprenant_id=utilisateur)
+        return render(request,"utilisateur/info_app.html", {"info_app":info_app})
+    except Apprenant.DoesNotExist:
+        pass
+    try:
         
-            info_form = Formateur.objects.get(user_formateur_id=utilisateur)
+        info_form = Formateur.objects.get(user_formateur_id=utilisateur)
         
 
         # on récupère les emplois du temps du formateur
-            planning = Planning.objects.filter(formateur=info_form)
+        planning = Planning.objects.filter(formateur=info_form)
 
         # on extrait les classes associées au formateur connecté à travers son emploi du temps
-            mes_classes = set(emploi.classe for emploi in planning)
+        mes_classes = set(emploi.classe for emploi in planning)
             
             
-            return render(request, "utilisateur/info_formateur.html", {"info_form":info_form, "mes_classes":mes_classes})
+        return render(request, "utilisateur/info_formateur.html", {"info_form":info_form, "mes_classes":mes_classes})
 
-        except Formateur.DoesNotExist:
+    except Formateur.DoesNotExist:
+        pass
     #si l'utilisateur n'est un formateur, il vérifie si est appprenant
-            try:
-                info_app = Apprenant.objects.filter(user_apprenant_id=utilisateur)
-                return render(request,"utilisateur/info_app.html", {"info_app":info_app})
-            except Apprenant.DoesNotExist:
-                return render(request,"utilisateur/error.html")
+    
+    if request.user.is_superuser:
+            
+        return render(request,"utilisateur/tableau_admin.html")
     return render(request,"utilisateur/error.html")
         
 @login_required
@@ -279,7 +277,8 @@ def liste_classe(request):
 def planning_formateur(request):
     utilisateur = request.user
     formateur = Formateur.objects.get(user_formateur_id=utilisateur)
-    planning = Planning.objects.filter(formateur=formateur)
+    plannings = Planning.objects.filter(formateur=formateur)
+
     #Formulaire pour filter les dates pour l'affichage de l'emplois du temps
     form = forms.DateEdtFormateurForm(request.GET)
 
@@ -287,21 +286,7 @@ def planning_formateur(request):
         date_debut = form.cleaned_data.get("date_debut")
         date_fin = form.cleaned_data.get("date_fin")
         classe = form.cleaned_data.get("classe")
-        plannings = planning.filter(date_debut__gte=date_debut, date_fin__lte=date_fin, classe__gte=classe)
-
-    if request.user.is_superuser:
-        plannings = Planning.objects.all()
-        formateur = Formateur.objects.all()
-
-        form = forms.DateEdtFormateurForm(request.GET)
-
-        if form.is_valid():
-            date_debut = form.cleaned_data.get("date_debut")
-            date_fin = form.cleaned_data.get("date_fin")
-            classe = form.cleaned_data.get("classe")
-            plannings = plannings.filter(date_debut__gte=date_debut, date_fin__lte=date_fin, classe__gte=classe)
-
-        return render(request, "utilisateur/plannings.html", {"plannings":plannings, "form":form})
+        plannings = plannings.filter(date_debut__gte=date_debut, date_fin__lte=date_fin, classe__gte=classe)
         
     return render(request, "utilisateur/planning_formateur.html", {"plannings":plannings, "form":form})
 
@@ -410,20 +395,25 @@ def supprimer_matiere(request, id):
     
 #tableau bord administrateur
 def tableau_admin(request):
-    planning = Planning.objects.all()
-    formateur = Formateur.objects.all()
-    
-    #Formulaire pour filter les dates pour l'affichage de l'emplois du temps
+    return render(request, "utilisateur/tableau_admin.html")
+
+def all_plannings(request):
+    plannings = None
+    #Formulaire pour filter les dates et classe pour l'affichage de l'emplois du temps
     form = forms.DateEdtFormateurForm(request.GET)
 
     if form.is_valid():
         date_debut = form.cleaned_data.get("date_debut")
         date_fin = form.cleaned_data.get("date_fin")
         classe = form.cleaned_data.get("classe")
-        plannings = planning.filter(date_debut__gte=date_debut, date_fin__lte=date_fin, classe__gte=classe)
-    
-    return render(request, "utilisateur/tableau_admin.html", {"plannings":plannings})
+        plannings = Planning.objects.filter(classe=classe).filter(date_debut__gte=date_debut, date_fin__lte=date_fin, classe__gte=classe)
 
+    return render(request, "planning/plannings.html", {"plannings":plannings, "form":form})
+
+#lister les filiere
+def list_filiere(request):
+    filieres = Filiere.objects.all()
+    return render(request, "utilisateur/liste_filiere.html", {"filieres":filieres})
 
 #les envoies mails
 def send_emails(request):

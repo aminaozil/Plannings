@@ -15,8 +15,8 @@
       <ul class="space-y-2 font-medium">
          <li>
            <img src="{% static 'images/admins.png' %}" class="mt-10 ms-12 h-24 w-24 rounded-full ml-10 border border-2 border-black" alt="user">
-           <span class="flex-1 ms-12 whitespace-nowrap text-yellow-300">{{info_form.prenom}}{{info_form.nom}}</span>
-           <span class="flex-1 ms-7 whitespace-nowrap text-yellow-300">{{info_form.email}}</span>
+           
+           <span class="flex-1 ms-7 whitespace-nowrap text-yellow-300">{{request.user.email}}</span>
          </li>
          <li>
             <a href="" class="mb-5 mt-12 border border-2 border-yellow-300 flex items-center p-2 text-yellow-300 rounded-lg dark:text-white hover:bg-yellow-300 hover:text-gray-900 dark:hover:bg-gray-700 group">
@@ -28,7 +28,7 @@
             </a>
          </li>
          <li>
-           <a href="" class="mb-5 border border-2 border-yellow-300 flex items-center p-2 text-yellow-300 rounded-lg dark:text-white hover:bg-yellow-300 hover:text-gray-900 dark:hover:bg-gray-700 group">
+           <a href="{% url "liste_apprenant" %}" class="mb-5 border border-2 border-yellow-300 flex items-center p-2 text-yellow-300 rounded-lg dark:text-white hover:bg-yellow-300 hover:text-gray-900 dark:hover:bg-gray-700 group">
              
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 hover:text-gray-900 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
@@ -39,7 +39,7 @@
            </a>
          </li>
          <li>
-           <a href="" class="mb-5 border border-2 border-yellow-300 flex items-center p-2 text-yellow-300 rounded-lg dark:text-white hover:bg-yellow-300 hover:text-gray-900 dark:hover:bg-gray-700 group">
+           <a href="{% url "liste_formateur" %}" class="mb-5 border border-2 border-yellow-300 flex items-center p-2 text-yellow-300 rounded-lg dark:text-white hover:bg-yellow-300 hover:text-gray-900 dark:hover:bg-gray-700 group">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 hover:text-gray-900 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
               </svg>
@@ -48,6 +48,16 @@
               
            </a>
          </li>
+         <li>
+            <a href="{% url "create_planning" %}" class="mb-5 border border-2 border-yellow-300 flex items-center p-2 text-yellow-300 rounded-lg dark:text-white hover:bg-yellow-300 hover:text-gray-900 dark:hover:bg-gray-700 group">
+               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 hover:text-gray-900 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+              
+               <span class="flex-1 ms-3 whitespace-nowrap">Plannings</span>
+               
+            </a>
+          </li>
          
          
          <li>
@@ -64,7 +74,7 @@
 </aside>
 
 <div class="p-4 sm:ml-64 bg-gray-10">
-   <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
+   <div class="p-4">
       <div class="flex items-center justify-center">
          <img src="{% static 'images/logob.png' %}" class="h-32 w-68" alt="user">
           
@@ -85,12 +95,14 @@
                   </p>
                </div>
             </a>
-            <div class="flex items-center justify-center rounded-sm h-28 bg-green-400 dark:bg-pink-900 hover:bg-green-900">
-               <p class="text-2xl text-gray-400 dark:text-gray-500">
-                  <span class="text-white uppercase">Filières</span>
-               </p>
-            </div>
-            <a href="{% url "planning_formateur" %}">
+            <a href="{% url "liste_filiere" %}">
+               <div class="flex items-center justify-center rounded-sm h-28 bg-green-400 dark:bg-pink-900 hover:bg-green-900">
+                  <p class="text-2xl text-gray-400 dark:text-gray-500">
+                     <span class="text-white uppercase">Filières</span>
+                  </p>
+               </div>
+           </a>
+            <a href="{% url "all_planning" %}">
                <div class="flex items-center justify-center rounded-sm h-28 bg-indigo-400 dark:bg-indigo-900 hover:bg-indigo-900">
                   <p class="text-2xl text-gray-400 dark:text-gray-500">
                      <span class="text-white uppercase">Plannings</span>
@@ -126,7 +138,7 @@
          </div>
          <img src="{% static 'images/send.jpg' %}" class="h-32 w-68" alt="email">
       </div>
-      <div class="p-4 mb-4 bg-white shadow-lg rounded-lg dark:border-gray-700">
+      {% comment %} <div class="p-4 mb-4 bg-white shadow-lg rounded-lg dark:border-gray-700">
          <div class="grid grid-cols-3 gap-4 mb-4">
 
             <div class="flex items-center justify-center h-24 rounded-sm bg-pink-500 dark:bg-pink-900">
@@ -153,51 +165,9 @@
             </div>
 
          </div>
-      </div>
-      <div class="bg-white flex items-center justify-center h-48 mb-4 rounded-sm bg-gray-50 dark:bg-gray-800">
-         <p class="text-2xl text-gray-400 dark:text-gray-500">
-            <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
-            </svg>
-         </p>
-      </div>
-      <div class="grid grid-cols-2 gap-4 mb-4">
-         <div class="flex items-center justify-center rounded-sm bg-gray-50 h-28 dark:bg-gray-800">
-            <p class="text-2xl text-gray-400 dark:text-gray-500">
-               <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
-               </svg>
-            </p>
-         </div>
-         <div class="flex items-center justify-center rounded-sm bg-gray-50 h-28 dark:bg-gray-800">
-            <p class="text-2xl text-gray-400 dark:text-gray-500">
-               <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
-               </svg>
-            </p>
-         </div>
-         <div class="flex items-center justify-center rounded-sm bg-gray-50 h-28 dark:bg-gray-800">
-            <p class="text-2xl text-gray-400 dark:text-gray-500">
-               <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
-               </svg>
-            </p>
-         </div>
-         <div class="flex items-center justify-center rounded-sm bg-gray-50 h-28 dark:bg-gray-800">
-            <p class="text-2xl text-gray-400 dark:text-gray-500">
-               <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
-               </svg>
-            </p>
-         </div>
-      </div>
-      <div class="flex items-center justify-center h-48 mb-4 rounded-sm bg-gray-50 dark:bg-gray-800">
-         <p class="text-2xl text-gray-400 dark:text-gray-500">
-            <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
-            </svg>
-         </p>
-      </div>
+      </div> {% endcomment %}
+      
+     
      
    </div>
 </div>

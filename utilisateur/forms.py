@@ -1,5 +1,5 @@
 from django import forms
-from .models import Filiere, User, Formateur, Classe, Apprenant, Salle, Matiere, Planning
+from .models import Filiere, User, Formateur, Classe, Apprenant, Planning
 
 
 class LoginForm(forms.Form):
@@ -112,6 +112,7 @@ class DateEdtFormateurForm(forms.Form):
     date_debut = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', "class":"mb-2 border border-gray-500 rounded-lg"}))
     date_fin = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', "class":"mb-2 border border-gray-500 rounded-lg"}))
     classe = forms.ModelChoiceField(queryset=Classe.objects.all(), widget=forms.Select(attrs={"class":"mb-2 border border-gray-500 rounded-lg"}))
+
 class SendEmailForm(forms.Form):
     users = forms.ModelMultipleChoiceField(queryset=User.objects.all(), widget=forms.SelectMultiple(
         attrs={

@@ -15,8 +15,8 @@
       <ul class="space-y-2 font-medium">
          <li>
            <img src="{% static 'images/admins.png' %}" class="mt-10 ms-12 h-24 w-24 rounded-full ml-10 border border-2 border-black" alt="user">
-           <span class="flex-1 ms-12 whitespace-nowrap text-yellow-300">{{info_form.prenom}}{{info_form.nom}}</span>
-           <span class="flex-1 ms-7 whitespace-nowrap text-yellow-300">{{info_form.email}}</span>
+           <span class="flex-1 ms-12 whitespace-nowrap text-yellow-300">{{user.first_name}} {{user.last_name}}</span>
+           <span class="flex-1 ms-7 whitespace-nowrap text-yellow-300">{{user.email}}</span>
          </li>
          <li>
             <a href="{% url "info_utilisateur" %}" class="mb-5 mt-12 border border-2 border-yellow-300 flex items-center p-2 text-yellow-300 rounded-lg dark:text-white hover:bg-yellow-300 hover:text-gray-900 dark:hover:bg-gray-700 group">
