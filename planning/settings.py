@@ -28,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['plannings-bilingue-tech-avenir.onrender.com']
 
 #pour l'authentification
 AUTH_USER_MODEL = 'utilisateur.User'
