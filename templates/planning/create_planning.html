@@ -78,7 +78,7 @@
       <label for="formateur">Choisir un professeur:</label>
       <select name="formateur" id="formateur" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  focus:ring-emerald-900 focus:border-emerald-900 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-emerald-900 dark:focus:border-emerald-900">
           {% for formateur in formateurs %}
-              <option value="{{ formateur.id }}">{{ formateur.nom }}</option>
+              <option value="{{ formateur.id }}">{{ formateur.nom }} {{ formateur.specialite }}</option>
           {% endfor %}
       </select><br>
   

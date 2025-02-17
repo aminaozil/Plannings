@@ -227,7 +227,7 @@ def create_planning(request):
                     salle=salle,
                     matiere=matiere,
                 )
-                return redirect('/liste_formateur/')
+                return redirect('/all_planning/')
 
     return render(request, 'planning/create_planning.html', {"formateurs":formateurs, "matieres":matieres, "salles":salles, "classes":classes, "selected_classe":selected_classe})
 
