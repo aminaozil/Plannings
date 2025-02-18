@@ -1,5 +1,6 @@
 from django import forms
-from .models import Filiere, User, Formateur, Classe, Apprenant, Planning
+from .models import Filiere, User, Formateur,Apprenant
+from plannings.models import Classe, Planning
 
 
 class LoginForm(forms.Form):
