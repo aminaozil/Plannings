@@ -26,9 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production! 'plannings-bilingue-tech-avenir.onrender.com'
-DEBUG = True
+DEBUG = config('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['plannings-bilingue-tech-avenir.onrender.com']
 
 #pour l'authentification
 AUTH_USER_MODEL = 'utilisateur.User'
@@ -90,18 +90,18 @@ WSGI_APPLICATION = 'planning.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    # 'default':dj_database_url.parse(config('DATABASE_URL'))
-    'default':{
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD' : config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT' : 5432,
+    'default':dj_database_url.parse(config('DATABASE_URL'))
+    # 'default':{
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': config('DB_NAME'),
+    #     'USER': config('DB_USER'),
+    #     'PASSWORD' : config('DB_PASSWORD'),
+    #     'HOST': config('DB_HOST'),
+    #     'PORT' : 5432,
         
 
     
-    }
+    # }
 
 }
 
@@ -154,9 +154,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #send mail
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "youmaminatambengue@gmail.com"
-EMAIL_HOST_PASSWORD = "briptiyiedpsunkp"
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 

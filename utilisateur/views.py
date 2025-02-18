@@ -3,9 +3,8 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.utils import timezone
 from django.core.mail import send_mail
-from plannings.models import Salle, Classe, Planning
+from plannings.models import Classe, Planning
 from . import formulaire
 from .models import Formateur, User, Apprenant, Matiere, Filiere
 
@@ -262,7 +261,7 @@ def send_emails(request):
                 send_mail(
                     sujet,
                     message,
-                    'youmaminatambengue@gmail.com',
+                    'settings.EMAIL_HOST_USER',
                     [user.email],
                     fail_silently=False,
 

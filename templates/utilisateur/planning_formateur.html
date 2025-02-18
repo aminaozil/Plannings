@@ -32,7 +32,6 @@
                   </tr>
               </thead>
                {% for planning in plannings %}
-              {% comment %} {{ formateur.full_name|upper }} {% endcomment %}
               <tbody>
                   <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                       <th class="px-6 py-4 ">
@@ -60,30 +59,6 @@
         </div>
       </div>
       <br>
-  
-    
-   
 
-     {% comment %}  <div class="pagination ml-[170px]">
-        <span class="step-links">
-            {% if prof.has_previous %}
-                <a href="?page=1">&laquo; premier</a>
-                <a href="?page={{ prof.previous_page_number }}">précédent</a>
-            {% endif %}
-    
-            <span class="current">
-                Page {{ prof.number }} sur {{ prof.paginator.num_pages }}.
-            </span>
-    
-            {% if prof.has_next %}
-                <a href="?page={{prof.next_page_number }}">suivant</a>
-                <a href="?page={{prof.paginator.num_pages }}">dernier &raquo;</a>
-            {% endif %}
-        </span>
-    </div>
-       {% endcomment %}
-      
-
-     
 </div>
 {% endblock %}
