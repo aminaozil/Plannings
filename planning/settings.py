@@ -30,7 +30,7 @@ SECRET_KEY = config('SECRET_KEY')
 #DEBUG = config('DEBUG', cast=bool)
 DEBUG = False
 
-ALLOWED_HOSTS = ['plannings-bilingue-tech-avenir.onrender.com']
+ALLOWED_HOSTS = ["plannings-bilingue-tech-avenir.onrender.com"]
 
 #pour l'authentification
 AUTH_USER_MODEL = 'utilisateur.User'
