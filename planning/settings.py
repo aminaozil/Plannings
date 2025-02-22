@@ -27,7 +27,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production! 'plannings-bilingue-tech-avenir.onrender.com'
-#DEBUG = config('DEBUG', cast=bool)
 DEBUG = False
 
 ALLOWED_HOSTS = ['plannings-bilingue-tech-avenir.onrender.com']
@@ -157,10 +156,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #send mail
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "youmaminatambengue@gmail.com"
-EMAIL_HOST_PASSWORD = "qbpiiyjnmvdrwvbs"
+EMAIL_BACKEND = config('DO_EMAIL_BACKEND')
+EMAIL_HOST = config('DO_EMAIL_HOST')
+EMAIL_USE_TLS = config('DO_EMAIL_USE_TLS')
+EMAIL_PORT = config('DO_EMAIL_PORT')
+EMAIL_HOST_USER = config('DO_EMAIL_HOST_USER ')
+EMAIL_HOST_PASSWORD = config('DO_EMAIL_HOST_PASSWORD')
 
