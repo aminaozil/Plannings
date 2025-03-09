@@ -11,9 +11,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production! 'plannings-bilingue-tech-avenir.onrender.com'
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['plannings-bilingue-tech-avenir.onrender.com']
 
 #pour l'authentification
 AUTH_USER_MODEL = 'utilisateur.User'
@@ -74,18 +74,18 @@ WSGI_APPLICATION = 'planning.wsgi.application'
 
 # Database
 DATABASES = {
-    #'default':dj_database_url.parse(config('DATABASE_URL'))
-    'default':{
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD' : config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT' : 5432,
+    'default':dj_database_url.parse(config('DATABASE_URL'))
+    # 'default':{
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': config('DB_NAME'),
+    #     'USER': config('DB_USER'),
+    #     'PASSWORD' : config('DB_PASSWORD'),
+    #     'HOST': config('DB_HOST'),
+    #     'PORT' : 5432,
         
 
     
-    }
+    # }
 
 }
 
