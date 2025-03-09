@@ -1,4 +1,5 @@
 import os
+import environ
 from pathlib import Path
 from decouple import config
 import dj_database_url
@@ -130,18 +131,16 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#send mail
-# EMAIL_BACKEND = config('EMAIL_BACKEND')
-# EMAIL_HOST = config('EMAIL_HOST')
-# EMAIL_USE_TLS = config('EMAIL_USE_TLS')
-# EMAIL_PORT = config('EMAIL_PORT')
-# EMAIL_HOST_USER = config('EMAIL_HOST_USER ')
-# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "youmaminatambengue@gmail.com"
-EMAIL_HOST_PASSWORD = "qbpiiyjnmvdrwvbs"
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+
+# Configuration des emails
+EMAIL_BACKEND = env("EMAIL_BACKEND")
+EMAIL_HOST = env("EMAIL_HOST")
+EMAIL_PORT = env.int("EMAIL_PORT")
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+
 
