@@ -4,7 +4,7 @@
 <div class="pl-11 pt-10 pr-10">
     <h1 class="font text-2xl mb-10 text-[#095415] text-center underline">Liste des Formateurs</h1>
     
-    <div class="relative overflow-x-auto  w-[900px] ml-[170px]" >
+    <div class="relative overflow-x-auto  w-[900px] ml-[170px] ms:w-[100px] ml-[45px]" >
       <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
         <div class="flex flex-2">
           <a href="{% url "create_formateur" %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
@@ -25,8 +25,8 @@
           </div>
       </form>
     </div>
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-[900px]" >
-      <table class="w-[900px] text-sm text-left rtl:text-right text-gray-950 dark:text-gray-400">
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-[900px] ms:w-[100px]" >
+      <table class="w-[900px] ms:w-[100px] text-sm text-left rtl:text-right text-gray-950 dark:text-gray-400">
           <thead class=" text-white uppercase bg-[#095415] dark:bg-[#095415] dark:text-white">
               <tr>
                   <th scope="col" class="px-6 py-3">
@@ -107,7 +107,7 @@
     
    
 
-      <div class="pagination ml-[170px]">
+      <div class="pagination ml-[45px]">
         <span class="step-links">
             {% if prof.has_previous %}
                 <a href="?page=1">&laquo; premier</a>

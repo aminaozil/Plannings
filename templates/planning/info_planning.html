@@ -2,8 +2,8 @@
 
 {% load static %}
 {% block content %}
-<div class="mt-16 mb-10 ml-[350px] mr-10 items-center max-w-2xl max-h-xl bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-3xl md:max-h-[500px] dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-    <p class="font-bold mb-5 pl-52 mt-5 text-xl">{{planning.date_debut|date:"d/m/Y"}} au {{planning.date_fin|date:"d/m/Y"}} <span class="text-gray-900 font-normal"></span> </p>
+<div class="mt-16 mb-10 lg:ml-[350px] lg:mr-10 sm:mr-5 items-center max-w-2xl max-h-xl bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-3xl md:max-h-[500px] ms:ml-[50px] dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+    <p class="font-bold mb-5 lg:pl-52 ms:pl-48 mt-5 text-xl">{{planning.date_debut|date:"d/m/Y"}} au {{planning.date_fin|date:"d/m/Y"}} <span class="text-gray-900 font-normal"></span> </p>
     <div class="grid grid-cols-2 gap-6">
         <div class="pl-16">
            
@@ -22,7 +22,7 @@
             <img src="{% static 'images/edt.webp' %}" class=" md:max-h-[310px] mt-5 h-full" alt="Logo">
         </div>
     <div>
-        <button class="mb-3 ml-48 text-white text-xl bg-[#095415] hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-700  rounded-lg text-sm w-full sm:w-full px-5 py-2.5 text-center dark:bg-green-700 dark:hover:bg-green-700 dark:focus:ring-[#095415]">
+        <button class="mb-3 lg:ml-48 sm:ml-32 text-white text-xl bg-[#095415] hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-700  rounded-lg text-sm w-full sm:w-full px-5 py-2.5 text-center dark:bg-green-700 dark:hover:bg-green-700 dark:focus:ring-[#095415]">
             <a href="{% url "planning_formateur" %}">
             Enregistrer
             </a>
