@@ -148,7 +148,7 @@ def planning_formateur(request):
         date_debut = form.cleaned_data.get("date_debut")
         date_fin = form.cleaned_data.get("date_fin")
         classe = form.cleaned_data.get("classe")
-        plannings = plannings.filter(date_debut__gte=date_debut, date_fin__lte=date_fin, classe__gte=classe)
+        plannings = plannings.filter(date_debut__lte=date_debut, date_fin__gte=date_fin, classe__gte=classe)
         
     return render(request, "utilisateur/planning_formateur.html", {"plannings":plannings, "form":form})
 
@@ -162,7 +162,7 @@ def all_plannings(request):
         date_debut = form.cleaned_data.get("date_debut")
         date_fin = form.cleaned_data.get("date_fin")
         classe = form.cleaned_data.get("classe")
-        plannings = Planning.objects.filter(classe=classe).filter(date_debut__gte=date_debut, date_fin__lte=date_fin, classe__gte=classe)
+        plannings = Planning.objects.filter(classe=classe).filter(date_debut__lte=date_debut, date_fin__gte=date_fin, classe__gte=classe)
 
     return render(request, "planning/plannings.html", {"plannings":plannings, "form":form})
 
@@ -179,6 +179,6 @@ def planning_app(request):
     if form.is_valid():
         date_debut = form.cleaned_data.get("date_debut")
         date_fin = form.cleaned_data.get("date_fin")
-        planning = planning.filter(date_debut__gte=date_debut, date_fin__lte=date_fin)
+        planning = planning.filter(date_debut__lte=date_debut, date_fin__gte=date_fin)
 
     return render(request, "planning/planning_app.html", {"planning":planning, "form":form})
