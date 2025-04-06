@@ -2,11 +2,10 @@
 
 {% load static %}
 {% block content %}
-  <div class="mt-3 ml-[400px] mr-10 p-5 items-center max-w-2xl max-h-3xl bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-md md:max-h-xl dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+  <div class="mt-10 ml-[400px] mr-10 p-5 items-center max-w-2xl max-h-3xl bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-md md:max-h-xl dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
 
     
     <div class="">
-        {% comment %} <img src="{% static 'images/logob.png' %}" class="ml-28 w-48 h-48" alt="Logo"> {% endcomment %}
     <form method="POST"
       class="max-w-md mx-auto ">
       {% csrf_token %}

@@ -72,12 +72,12 @@ class ApprenantForm(forms.ModelForm):
         ))
     user_apprenant = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.Select(
         attrs={
-             "class":"mb-10 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-cyan-500 dark:focus:border-cyan-500"
+             "class":"mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-cyan-500 dark:focus:border-cyan-500"
         }
         ))
     classe_apprenant = forms.ModelChoiceField(queryset=Classe.objects.all(), widget=forms.Select(
         attrs={
-             "class":"mb-10 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-cyan-500 dark:focus:border-cyan-500"
+             "class":"mb-5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-cyan-500 dark:focus:border-cyan-500"
         }
         ))
     
